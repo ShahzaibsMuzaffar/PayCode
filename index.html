@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paycode</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a6b46"><link rel="icon" type="image/png" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Paycode"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{--bg:#efeadd;--card:#faf7ef;--ink:#17140f;--mut:#6a6355;--line:#cfc7b3;--bd:#17140f;--pri:#0a6b46;--priI:#fff;--tint:#e3ead6;--gt:#d6ecd8;--g:#0a7a3f;--r:#b3261e;--am:#8a5200;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13110d;--card:#1d1a14;--ink:#f2ecdf;--mut:#a39b88;--line:#383327;--bd:#5a5340;--pri:#3ddc97;--priI:#07130d;--tint:#26301f;--gt:#173321;--g:#4ade80;--r:#f87171;--am:#fbbf24}}
+:root[data-theme="dark"]{--bg:#13110d;--card:#1d1a14;--ink:#f2ecdf;--mut:#a39b88;--line:#383327;--bd:#5a5340;--pri:#3ddc97;--priI:#07130d;--tint:#26301f;--gt:#173321;--g:#4ade80;--r:#f87171;--am:#fbbf24}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:520px;margin:0 auto;padding:16px 16px 40px}
+button{font:inherit;cursor:pointer;color:inherit}
+.mono,.amt,small,.tag{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.mast{display:flex;align-items:center;gap:12px;padding-bottom:16px;margin-bottom:16px;border-bottom:2px solid var(--bd)}
+.mark{width:46px;height:46px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center}
+.brand{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1}.tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-top:5px}.mast>div:nth-child(2){flex:1}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--bd)}.top h2{margin:0;font-size:21px;flex:1;letter-spacing:-.02em}
+.ib{width:46px;height:46px;border-radius:10px;border:2px solid var(--bd);background:var(--card);display:grid;place-items:center}
+.act{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;width:100%;padding:16px;background:var(--card);border:2px solid var(--bd);border-radius:12px;box-shadow:4px 4px 0 var(--bd);transition:transform .08s,box-shadow .08s}
+.act:active,.li:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--bd)}
+.act b{font-size:17px}.act small{color:var(--mut);font-size:12px;word-break:break-all}
+.ai{width:46px;height:46px;border-radius:10px;background:var(--tint);display:grid;place-items:center;flex:0 0 46px}
+.act.hero{flex-direction:row;align-items:center;gap:16px;background:var(--pri);color:var(--priI);border-color:var(--bd);padding:20px 16px;margin-bottom:18px}
+.hero .ai{background:var(--priI);color:var(--pri);width:56px;height:56px;flex-basis:56px}.hero .at b{font-size:22px;display:block}.hero small{color:var(--priI);opacity:.85;font-family:inherit;font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.li{display:flex;align-items:center;gap:14px;width:100%;background:var(--card);border:2px solid var(--bd);border-radius:12px;padding:15px 16px;font-weight:700;margin-bottom:12px;box-shadow:3px 3px 0 var(--bd);transition:transform .08s,box-shadow .08s}
+.li span{flex:1;text-align:left}.li svg:last-child{color:var(--mut)}
+.note{color:var(--mut);font-size:12px;margin:16px 0 0}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.btn{border:2px solid var(--bd);border-radius:10px;padding:14px 16px;background:var(--pri);color:var(--priI);font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.btn.sec{background:var(--card);color:var(--ink)}.btn.g{background:var(--g);color:#fff}.btn.r{background:var(--r);color:#fff}
+.circ{flex:0 0 52px!important;width:52px;height:52px;border-radius:10px;border:2px solid var(--bd);background:var(--card);display:grid;place-items:center}
+label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:16px 0 6px}
+input,select{width:100%;padding:13px;border-radius:10px;border:2px solid var(--bd);background:var(--bg);color:var(--ink);font:inherit}
+input:focus,select:focus{outline:3px solid var(--pri);outline-offset:1px}
+.amt{font-size:30px;font-weight:700}
+.seg{display:flex;border:2px solid var(--bd);border-radius:10px;overflow:hidden}.seg button{flex:1;border:0;background:var(--card);padding:11px;font-weight:700}.seg button.on{background:var(--ink);color:var(--bg)}
+.with{display:flex;gap:8px}.with input{flex:1;min-width:0}.with .circ{flex:0 0 50px!important;width:50px;height:50px}
+.mut{color:var(--mut);font-size:14px}.warn{color:var(--am);font-size:14px;margin-top:8px;font-weight:600}
+.tx{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}.tx:last-child{border:0}
+.b{font-size:11px;padding:3px 8px;border-radius:6px;font-weight:800;background:var(--tint);border:1.5px solid var(--bd)}.b.ok{background:var(--gt);color:var(--g)}.b.failed{color:var(--r)}
+.pg{display:none}.pg.on{display:block}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:9;overflow:auto}.ov.on{display:flex}.ov .card{width:100%;max-width:420px;margin:0}
+video{width:100%;border-radius:10px;background:#000;max-height:50vh}img.r{width:100%;border-radius:10px;border:2px solid var(--bd)}
+.pend{display:none;background:var(--tint);border:2px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:16px}.pend .btn{margin-top:10px;padding:11px}
+details{border-bottom:1px solid var(--line);padding:10px 0}summary{font-weight:700;cursor:pointer}ol,ul{padding-left:20px;margin:8px 0}li{margin:5px 0}
+.disc{display:flex;gap:12px;color:var(--am);border-color:var(--am)}.disc div{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:10px;z-index:20;font-size:14px;max-width:90%}
+a.li{text-decoration:none;color:inherit}.chip{display:inline-block;border:2px solid var(--bd);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;margin:0 6px 8px 0;background:var(--tint)}.dev{display:flex;align-items:center;gap:14px;margin-bottom:14px}.dev .mark{width:68px;height:68px;font-size:24px;font-weight:800;letter-spacing:-.02em;flex:0 0 68px}.dev h3{margin:0;font-size:21px;letter-spacing:-.02em}
+html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webkit-user-select:none;user-select:none}input{-webkit-user-select:text;user-select:text}
+</style></head><body>
+<main>
+
+<section class="pg on" id="home">
+ <div class="mast"><div class="mark"><i data-ic="wallet" data-s="24"></i></div><div><div class="brand">Paycode</div><div class="tag">UPI over USSD / offline</div></div>
+  <button class="ib" id="thm" aria-label="Toggle theme"><i data-ic="moon" data-s="22"></i></button></div>
+ <div class="pend" id="pendBox"></div>
+ <button class="act hero" id="scan"><span class="ai"><i data-ic="scan" data-s="30"></i></span><span class="at"><b>Scan QR</b><small>Reads the UPI ID and copies it</small></span></button>
+ <input type="file" id="file" accept="image/*" hidden>
+ <div class="grid">
+  <button class="act" data-go="pay"><span class="ai"><i data-ic="wallet" data-s="24"></i></span><b>Send money</b><small id="hU"></small></button>
+  <button class="act" id="bal"><span class="ai"><i data-ic="card" data-s="24"></i></span><b>Balance</b><small id="hB"></small></button>
+  <button class="act" id="pic"><span class="ai"><i data-ic="upload" data-s="24"></i></span><b>QR from image</b><small>Pick a saved QR</small></button>
+  <button class="act" data-go="hist"><span class="ai"><i data-ic="clock" data-s="24"></i></span><b>History</b><small>Past payments</small></button>
+ </div>
+ <button class="li" id="inst" style="display:none"><i data-ic="download"></i><span>Install Paycode app</span><i data-ic="chev"></i></button>
+ <button class="li" data-go="help"><i data-ic="book"></i><span>Setup guide and help</span><i data-ic="chev"></i></button>
+ <button class="li" data-go="set"><i data-ic="gear"></i><span>Settings and SIM codes</span><i data-ic="chev"></i></button>
+ <button class="li" data-go="about"><i data-ic="info"></i><span>About app and developer</span><i data-ic="chev"></i></button>
+ <p class="note">Works only on SIMs that support UPI over USSD. See the setup guide.</p>
+</section>
+
+<section class="pg" id="pay">
+ <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>Send Money</h2></div>
+ <div class="card">
+  <div class="seg"><button id="mUpi" class="on">UPI ID</button><button id="mMob">Mobile number</button></div>
+  <label id="toL">Receiver UPI ID</label>
+  <div class="with"><input id="to" placeholder="name@bank" autocapitalize="off" autocomplete="off"><button class="circ" id="cp" aria-label="Copy"><i data-ic="copy"></i></button><button class="circ" id="scan2" aria-label="Scan QR"><i data-ic="scan"></i></button></div>
+  <label>Receiver name (optional)</label><input id="nm" placeholder="Shown on receipt">
+  <label>Amount (₹)</label><input id="am" class="amt" type="number" inputmode="decimal" placeholder="0">
+  <label>Note (optional)</label><input id="nt" maxlength="40">
+  <div class="warn" id="lim"></div>
+  <div style="height:16px"></div>
+  <button class="btn" id="go">Continue to Dialer</button>
+  <p class="mut" style="margin:12px 0 0">The receiver ID is copied. In the dialer, paste it, enter the same amount, then your UPI PIN. Never enter your PIN in this app.</p>
+ </div>
+</section>
+
+<section class="pg" id="hist">
+ <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>History</h2></div>
+ <div class="card"><div class="mut">Successful total</div><div class="amt" id="tot">₹0</div></div>
+ <div class="card" id="list"></div>
+ <div class="row"><button class="btn sec" id="csv"><i data-ic="download" data-s="20"></i>Export CSV</button><button class="btn sec" id="clr">Clear all</button></div>
+</section>
+
+<section class="pg" id="help">
+ <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>Help &amp; Walkthrough</h2></div>
+ <div class="card disc"><i data-ic="alert" data-s="26"></i><div><b>Disclaimer</b><p class="mut" style="margin:6px 0 0">This app only opens your phone dialer with a code. It cannot read the reply, move money, or confirm a payment. It works only with SIMs whose operator supports UPI over USSD (*99# works on many operators such as Airtel, not all). Other SIMs or countries may use different codes; change them in Settings. Receipts are sender-reported, not bank-verified. Always check your bank SMS.</p></div></div>
+ <div class="card">
+ <details open><summary>Before setup (one time)</summary><ol>
+  <li>Use the mobile number linked to your bank account. The SIM must be in this phone.</li>
+  <li>Dial <b>*99#</b> and choose your language.</li>
+  <li>Choose <b>Profile</b> and register: select your bank, then enter the last 6 digits and expiry of your debit card.</li>
+  <li>Set your <b>UPI PIN</b> when asked. Remember it and never share it.</li>
+  <li>Wait for the confirmation message, then test with ₹1 to ₹10.</li></ol></details>
+ <details><summary>How to send money</summary><ol>
+  <li>Scan the receiver's QR code, or open Send to UPI ID.</li>
+  <li>Enter the amount in the app first.</li>
+  <li>Tap Continue to Dialer, then press call.</li>
+  <li>Paste the copied ID when asked, enter the same amount, then your PIN.</li>
+  <li>Return to the app and mark Success or Failed. Add the reference number.</li>
+  <li>Share the receipt image with the receiver.</li></ol></details>
+ <details><summary>Check balance</summary><ol><li>Tap Check Balance on the home screen, press call, and enter your UPI PIN.</li></ol></details>
+ <details><summary>Troubleshooting</summary><ul>
+  <li>Dialer does not open: use Chrome and allow it to open the phone app.</li>
+  <li>Code shows invalid: your SIM uses another code. Edit it in Settings.</li>
+  <li>Limits apply, typically ₹5,000 per payment on *99#.</li>
+  <li>Debited but not received: contact your bank with the reference number.</li>
+  <li>Data stays on this device. Export CSV for a backup.</li></ul></details></div>
+</section>
+
+<section class="pg" id="set">
+ <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>Settings</h2></div>
+ <div class="card"><label style="margin-top:0">SIM / operator</label>
+  <select id="op"><option value="airtel">Airtel (India)</option><option value="other">Other / custom</option></select>
+  <p class="mut">Defaults are the standard *99# UPI codes. Check your operator's codes. Placeholders {upi}, {mobile}, {amount} are supported for one-line codes.</p>
+  <label>Send to UPI ID code</label><input id="cU"><label>Send to mobile number code</label><input id="cM"><label>Check balance code</label><input id="cB">
+  <label>Amount warning above (₹)</label><input id="cL" type="number">
+  <div style="height:16px"></div><button class="btn" id="sv">Save Settings</button></div>
+</section>
+<section class="pg" id="about">
+ <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>About</h2></div>
+ <div class="card"><div class="tag" style="margin:0 0 8px">About the app</div>
+  <h3 style="margin:0 0 8px;font-size:20px">Paycode <span class="mono mut" style="font-size:13px">v1.0</span></h3>
+  <p class="mut" style="margin:0 0 10px">Paycode helps you make UPI payments without mobile data. It reads the receiver's QR code, copies the UPI ID, opens your dialer with the USSD code, and keeps a clear record of every payment you mark.</p>
+  <p class="mut" style="margin:0">Your history lives only on this device. There are no accounts, no tracking, and nothing is ever sent anywhere. Paycode never sees your UPI PIN.</p></div>
+ <div class="card"><div class="tag" style="margin:0 0 12px">About the developer</div>
+  <div class="dev"><div class="mark">SM</div><div><h3>Shahzaib Muzaffar</h3><div class="mut">Creator and developer of Paycode</div></div></div>
+  <p class="mut" style="margin:0 0 14px">I build practical tools that keep working when the network does not. Paycode is made on one idea: good software should be fast, private, and simple enough for anyone to use, even with no signal.</p>
+  <span class="chip">Offline-first</span><span class="chip">Privacy-first</span><span class="chip">Independent maker</span><span class="chip">Open to feedback</span></div>
+ <div class="tag" style="margin:4px 0 10px">Get in touch</div>
+ <a class="li" href="https://www.instagram.com/shahzaib_muzaffar_7/" target="_blank" rel="noopener noreferrer"><i data-ic="instagram"></i><span>Instagram<br><small class="mut">@shahzaib_muzaffar_7</small></span><i data-ic="chev"></i></a>
+ <a class="li" href="https://t.me/Owner_Of_Crypton" target="_blank" rel="noopener noreferrer"><i data-ic="send"></i><span>Telegram<br><small class="mut">@Owner_Of_Crypton</small></span><i data-ic="chev"></i></a>
+ <a class="li" href="mailto:forcontactonlyprsnl@gmail.com"><i data-ic="mail"></i><span>Email<br><small class="mut">forcontactonlyprsnl@gmail.com</small></span><i data-ic="chev"></i></a>
+ <p class="note">Found a bug or want a feature? Send a message.</p>
+</section>
+</main>
+
+<div class="ov" id="dov"><div class="card"><h3 style="margin:0 0 6px">Clear all history?</h3><p class="mut">This deletes every saved payment and cannot be undone.</p><div class="row"><button class="btn sec" id="dno">Cancel</button><button class="btn r" id="dyes">Delete all</button></div></div></div>
+<div class="ov" id="qov"><div class="card"><h3 style="margin:0 0 6px">Scan QR Code</h3><p class="mut" id="qm">Point the camera at a UPI QR code.</p><video id="vid" playsinline muted></video><div style="height:14px"></div><button class="btn sec" id="qx">Cancel</button></div></div>
+<div class="ov" id="cov"><div class="card">
+ <div class="tag" style="margin:0 0 8px">Payment pending</div>
+ <div class="amt" id="cA"></div><div class="mut" id="cs"></div>
+ <p class="mut" style="margin:12px 0 0">Finish the payment in the dialer, then come back and pick the result.</p>
+ <label>Reference / UTR no. from the reply (optional)</label>
+ <div class="with"><input id="ref" placeholder="Paste or type" autocomplete="off"><button class="circ" id="rp" aria-label="Paste reference"><i data-ic="paste" data-s="22"></i></button></div>
+ <div style="height:16px"></div>
+ <div class="row"><button class="btn g" id="yes">Successful</button><button class="btn r" id="no">Failed</button></div>
+ <div style="height:10px"></div><button class="btn sec" id="later">Decide later</button></div></div>
+<div class="ov" id="rov"><div class="card"><img class="r" id="rimg" alt="Receipt"><div style="height:12px"></div><div class="row"><button class="btn" id="shr"><i data-ic="share" data-s="20"></i>Share</button><button class="btn sec" id="dl"><i data-ic="download" data-s="20"></i>Save</button></div><div style="height:10px"></div><button class="btn sec" id="rx">Close</button></div></div>
+
+<script>
+const I={instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',paste:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="8" y="8" width="8" height="8" rx="1"/>',upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',wallet:'<path d="M20 7H5a2 2 0 0 1 0-4h13v4zM3 5v14a2 2 0 0 0 2 2h15V7"/><circle cx="16.5" cy="14" r="1"/>',card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',back:'<path d="M15 18l-6-6 6-6"/>',help:'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',chev:'<path d="M9 18l6-6-6-6"/>',share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',download:'<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',alert:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>'};
+const svg=(n,s)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+document.querySelectorAll('i[data-ic]').forEach(e=>{e.outerHTML=svg(e.dataset.ic,e.dataset.s||22)});
+const $=i=>document.getElementById(i);
+const DEF={op:'airtel',cU:'*99*1*3#',cM:'*99*1*1#',cB:'*99*3#',cL:5000};
+let S={tx:[],cfg:{...DEF},pend:null,theme:''},mode='upi',stream=null,scanning=false;
+try{const r=localStorage.getItem('ussdpay');if(r){const o=JSON.parse(r);S={...S,...o,cfg:{...DEF,...(o.cfg||{})}}}}catch(e){}
+const save=()=>{try{localStorage.setItem('ussdpay',JSON.stringify(S))}catch(e){}};
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
+const fmt=t=>new Date(t).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dial=c=>{location.href='tel:'+c.replace(/#/g,'%23')};
+async function copy(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}x.remove();return ok}}
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+function go(id){document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.id===id));if(id==='hist')renderH();if(id==='home')pendBox();window.scrollTo(0,0)}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+function applyTheme(){if(S.theme)document.documentElement.dataset.theme=S.theme;const dark=S.theme?S.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;$('thm').innerHTML=svg(dark?'sun':'moon',22)}
+$('thm').onclick=()=>{const dark=S.theme?S.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;S.theme=dark?'light':'dark';save();applyTheme()};
+
+function setMode(m){mode=m;$('mUpi').classList.toggle('on',m==='upi');$('mMob').classList.toggle('on',m==='mob');$('toL').textContent=m==='upi'?'Receiver UPI ID':'Receiver mobile number';$('to').placeholder=m==='upi'?'name@bank':'10-digit number';$('to').inputMode=m==='upi'?'text':'numeric'}
+$('mUpi').onclick=()=>setMode('upi');$('mMob').onclick=()=>setMode('mob');
+$('cp').onclick=async()=>{const v=$('to').value.trim();if(!v)return toast('Nothing to copy');toast(await copy(v)?'Copied':'Copy failed')};
+function lim(){$('lim').textContent=+$('am').value>S.cfg.cL?`Above your ${inr(S.cfg.cL)} limit. The payment may fail.`:''}$('am').oninput=lim;
+
+function applyQR(txt){let pa='',pn='',am='',tn='';txt=(txt||'').trim();
+ try{if(/^upi:/i.test(txt)){const q=new URL(txt.replace(/^upi:\/\//i,'https://x/')).searchParams;pa=q.get('pa')||'';pn=q.get('pn')||'';am=q.get('am')||'';tn=q.get('tn')||''}else if(/^[\w.\-]{2,}@[\w.\-]{2,}$/.test(txt))pa=txt}catch(e){}
+ if(!pa)return false;setMode('upi');$('to').value=pa;$('nm').value=pn;if(am)$('am').value=am;$('nt').value=tn;lim();copy(pa);go('pay');toast('UPI ID copied: '+pa);return true}
+async function startScan(){
+ if(!('BarcodeDetector' in window)){toast('Live scan is not supported here. Use the upload button.');return}
+ try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})}catch(e){toast('Camera blocked. Use the upload button.');return}
+ $('vid').srcObject=stream;await $('vid').play();$('qov').classList.add('on');scanning=true;
+ const bd=new BarcodeDetector({formats:['qr_code']});
+ (async function loop(){if(!scanning)return;try{const r=await bd.detect($('vid'));if(r.length){if(applyQR(r[0].rawValue)){stopScan();return}$('qm').textContent='Not a UPI QR code. Keep scanning.'}}catch(e){}setTimeout(loop,250)})()}
+function stopScan(){scanning=false;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('qov').classList.remove('on')}
+$('scan').onclick=startScan;$('scan2').onclick=startScan;$('qx').onclick=stopScan;$('pic').onclick=()=>$('file').click();
+$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!('BarcodeDetector' in window)){toast('QR decoding is not supported on this browser');return}
+ try{const bm=await createImageBitmap(f);const r=await new BarcodeDetector({formats:['qr_code']}).detect(bm);if(!r.length||!applyQR(r[0].rawValue))toast('No UPI QR code found in that image')}catch(x){toast('Could not read the image')}e.target.value=''};
+
+$('go').onclick=async()=>{const to=$('to').value.trim(),a=+$('am').value;
+ if(!to)return toast(mode==='upi'?'Enter the UPI ID':'Enter the mobile number');
+ if(mode==='upi'&&!/^[\w.\-]+@[\w.\-]+$/.test(to))return toast('UPI ID looks invalid');
+ if(mode==='mob'&&to.replace(/\D/g,'').length<10)return toast('Enter a 10-digit number');
+ if(!(a>0))return toast('Enter the amount first');
+ const t={id:Date.now(),to,mode,name:$('nm').value.trim(),amt:a,note:$('nt').value.trim(),t:Date.now(),status:'pending',ref:''};
+ S.tx.unshift(t);S.pend=t.id;save();await copy(to);
+ const code=(mode==='upi'?S.cfg.cU:S.cfg.cM).replace('{upi}',to).replace('{mobile}',to).replace('{amount}',a);
+ snz=false;askConfirm();toast('Receiver copied. Opening dialer...');setTimeout(()=>dial(code),900)};
+$('bal').onclick=()=>dial(S.cfg.cB);
+
+const P=()=>S.tx.find(x=>x.id===S.pend&&x.status==='pending');
+function askConfirm(){const t=P();if(!t)return;$('cA').textContent=inr(t.amt);$('cs').textContent='to '+(t.name||t.to);$('ref').value='';$('cov').classList.add('on')}
+let snz=false;const ensure=()=>{if(P()&&!snz&&!$('cov').classList.contains('on')&&!$('rov').classList.contains('on'))askConfirm()};document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')ensure()});addEventListener('pageshow',ensure);addEventListener('focus',ensure);
+function pendBox(){const t=P(),b=$('pendBox');if(t){b.style.display='block';b.innerHTML=`<b>Pending payment</b><div class="mut">${inr(t.amt)} to ${esc(t.name||t.to)}</div><button class="btn" id="pb">Mark result</button>`;$('pb').onclick=askConfirm}else b.style.display='none'}
+function resolve(st){const t=P();if(!t)return;t.status=st;t.ref=$('ref').value.trim();S.pend=null;save();$('cov').classList.remove('on');go('home');receipt(t)}
+$('yes').onclick=()=>resolve('ok');$('no').onclick=()=>resolve('failed');$('later').onclick=()=>{snz=true;$('cov').classList.remove('on')};$('rp').onclick=async()=>{try{$('ref').value=(await navigator.clipboard.readText()).trim()}catch(e){toast('Clipboard blocked. Paste manually.')}};
+
+function receipt(t){
+ const ok=t.status==='ok',W=720,col=ok?'#0a7a3f':'#b3261e',soft=ok?'#e0f1e6':'#fbe4e1',ink='#17140f',gray='#6a6355',F='-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif',M='ui-monospace,Menlo,Consolas,monospace';
+ const rows=[['Paid to',t.name||t.to]];if(t.name)rows.push([t.mode==='upi'?'UPI ID':'Mobile no.',t.to]);rows.push(['Date and time',fmt(t.t)],['Payment mode','UPI via USSD (*99#)']);if(t.note)rows.push(['Note',t.note]);
+ const hasRef=!!t.ref,H=540+rows.length*72+(hasRef?170:30)+130+28;
+ const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ const rr=(a,b,w,h,r)=>{x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()};
+ const fit=(str,mw,sz,wt,fam)=>{do{x.font=wt+' '+sz+'px '+fam;sz-=2}while(x.measureText(str).width>mw&&sz>12)};
+ x.fillStyle='#e9e4d6';x.fillRect(0,0,W,H);
+ x.fillStyle='#fff';rr(28,28,W-56,H-56,22);x.fill();
+ x.save();rr(28,28,W-56,H-56,22);x.clip();x.fillStyle=col;x.fillRect(28,28,W-56,10);x.restore();
+ x.textAlign='left';x.fillStyle=ink;x.font='800 22px '+F;x.fillText('PAYCODE',64,92);
+ x.textAlign='right';x.fillStyle=gray;x.font='20px '+F;x.fillText('Payment receipt',W-64,92);
+ x.strokeStyle='#e4ddcb';x.lineWidth=2;x.beginPath();x.moveTo(64,116);x.lineTo(W-64,116);x.stroke();
+ const cx=W/2,cy=206;x.fillStyle=soft;x.beginPath();x.arc(cx,cy,60,0,7);x.fill();x.fillStyle=col;x.beginPath();x.arc(cx,cy,42,0,7);x.fill();
+ x.strokeStyle='#fff';x.lineWidth=8;x.lineCap='round';x.lineJoin='round';x.beginPath();
+ if(ok){x.moveTo(cx-17,cy+2);x.lineTo(cx-5,cy+14);x.lineTo(cx+19,cy-13)}else{x.moveTo(cx-14,cy-14);x.lineTo(cx+14,cy+14);x.moveTo(cx+14,cy-14);x.lineTo(cx-14,cy+14)}x.stroke();
+ x.textAlign='center';x.fillStyle=col;x.font='800 34px '+F;x.fillText(ok?'Payment successful':'Payment failed',cx,318);
+ x.fillStyle=ink;fit(inr(t.amt),W-140,76,'800',F);x.fillText(inr(t.amt),cx,406);
+ x.fillStyle=gray;x.font='20px '+F;x.fillText(ok?'Marked successful by the sender':'Marked failed by the sender',cx,446);
+ x.setLineDash([10,8]);x.strokeStyle='#c9c0aa';x.beginPath();x.moveTo(64,490);x.lineTo(W-64,490);x.stroke();x.setLineDash([]);
+ x.fillStyle='#e9e4d6';x.beginPath();x.arc(28,490,18,0,7);x.fill();x.beginPath();x.arc(W-28,490,18,0,7);x.fill();
+ let y=550;rows.forEach(r=>{x.textAlign='left';x.fillStyle=gray;x.font='20px '+F;x.fillText(r[0],64,y);x.textAlign='right';x.fillStyle=ink;fit(String(r[1]),400,22,'700',F);x.fillText(String(r[1]),W-64,y);x.strokeStyle='#eee8d8';x.lineWidth=1.5;x.beginPath();x.moveTo(64,y+24);x.lineTo(W-64,y+24);x.stroke();y+=72});
+ if(hasRef){y+=6;x.fillStyle=soft;rr(64,y,W-128,128,14);x.fill();x.textAlign='center';x.fillStyle=col;x.font='800 16px '+F;x.fillText('REFERENCE NO.',cx,y+38);x.fillStyle=ink;fit(t.ref,W-190,40,'700',M);x.fillText(t.ref,cx,y+90);y+=128+30}
+ else y+=30;
+ x.textAlign='center';x.fillStyle=gray;x.font='17px '+F;x.fillText('Generated by the sender using Paycode. Not verified by any bank.',cx,y+34);x.fillText('Receiver: please confirm the credit in your bank SMS.',cx,y+62);
+ $('rimg').src=c.toDataURL('image/png');$('rov').classList.add('on');$('rov').dataset.id=t.id}
+$('rx').onclick=()=>$('rov').classList.remove('on');
+$('dl').onclick=()=>{const a=document.createElement('a');a.href=$('rimg').src;a.download='receipt-'+$('rov').dataset.id+'.png';a.click()};
+$('shr').onclick=async()=>{try{const b=await(await fetch($('rimg').src)).blob();const f=new File([b],'receipt.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});else $('dl').click()}catch(e){}};
+
+function renderH(){const ok=S.tx.filter(t=>t.status==='ok');$('tot').textContent=inr(ok.reduce((s,t)=>s+t.amt,0));
+ $('list').innerHTML=S.tx.length?S.tx.map(t=>`<div class="tx" data-id="${t.id}"><div><b>${esc(t.name||t.to)}</b><div class="mut">${fmt(t.t)}${t.ref?' · '+esc(t.ref):''}</div></div><div style="text-align:right"><b>${inr(t.amt)}</b><div><span class="b ${t.status}">${t.status==='ok'?'SUCCESS':t.status.toUpperCase()}</span></div></div></div>`).join(''):'<span class="mut">No payments yet.</span>';
+ document.querySelectorAll('.tx').forEach(r=>r.onclick=()=>{const t=S.tx.find(x=>x.id==r.dataset.id);if(t.status==='pending'){S.pend=t.id;askConfirm()}else receipt(t)})}
+$('csv').onclick=()=>{const rows=[['date','to','name','amount','status','reference','note']].concat(S.tx.map(t=>[new Date(t.t).toISOString(),t.to,t.name,t.amt,t.status,t.ref,t.note]));const s=rows.map(r=>r.map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv'}));a.download='payments.csv';a.click()};
+$('clr').onclick=()=>$('dov').classList.add('on');$('dno').onclick=()=>$('dov').classList.remove('on');$('dyes').onclick=()=>{S.tx=[];S.pend=null;save();$('dov').classList.remove('on');renderH();pendBox();toast('History cleared')};
+
+function loadSet(){$('op').value=S.cfg.op;$('cU').value=S.cfg.cU;$('cM').value=S.cfg.cM;$('cB').value=S.cfg.cB;$('cL').value=S.cfg.cL;$('hU').textContent=S.cfg.cU;$('hB').textContent=S.cfg.cB}
+$('op').onchange=()=>{if($('op').value==='airtel'){$('cU').value=DEF.cU;$('cM').value=DEF.cM;$('cB').value=DEF.cB}};
+$('sv').onclick=()=>{S.cfg={op:$('op').value,cU:$('cU').value.trim()||DEF.cU,cM:$('cM').value.trim()||DEF.cM,cB:$('cB').value.trim()||DEF.cB,cL:+$('cL').value||5000};save();loadSet();lim();toast('Settings saved');go('home')};
+let dip=null;const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+function showInstall(){$('inst').style.display=standalone()?'none':(dip||isIOS)?'flex':'none'}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;showInstall()});
+addEventListener('appinstalled',()=>{dip=null;showInstall();toast('Paycode installed')});
+$('inst').onclick=async()=>{if(dip){dip.prompt();try{await dip.userChoice}catch(e){}dip=null;showInstall()}else toast('Tap Share, then Add to Home Screen')};
+try{if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}catch(e){}
+loadSet();applyTheme();pendBox();ensure();showInstall();
+</script></body></html>
