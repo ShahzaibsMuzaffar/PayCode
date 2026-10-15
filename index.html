@@ -49,6 +49,15 @@ details{border-bottom:1px solid var(--line);padding:10px 0}summary{font-weight:7
 .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:10px;z-index:20;font-size:14px;max-width:90%}
 a.li{text-decoration:none;color:inherit}.chip{display:inline-block;border:2px solid var(--bd);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;margin:0 6px 8px 0;background:var(--tint)}.dev{display:flex;align-items:center;gap:14px;margin-bottom:14px}.dev .mark{width:68px;height:68px;font-size:24px;font-weight:800;letter-spacing:-.02em;flex:0 0 68px}.dev h3{margin:0;font-size:21px;letter-spacing:-.02em}
 html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webkit-user-select:none;user-select:none}input{-webkit-user-select:text;user-select:text}
+.tour{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;overflow:auto;padding-top:env(safe-area-inset-top,0px)}.tour.on{display:block}
+.tin{max-width:520px;margin:0 auto;padding:18px 16px 24px;min-height:100%;display:flex;flex-direction:column}.tbody{flex:1;padding:8px 0}.tbody h2{font-size:26px;letter-spacing:-.02em;margin:16px 0 10px}
+.tic{width:72px;height:72px;border-radius:14px;background:var(--pri);color:var(--priI);border:2px solid var(--bd);box-shadow:4px 4px 0 var(--bd);display:grid;place-items:center}
+.dots{display:flex;gap:6px}.dots i{flex:1;height:6px;border-radius:3px;background:var(--line)}.dots i.on{background:var(--pri)}
+.tfoot{display:flex;gap:10px;margin-top:16px}.tfoot .btn{flex:1}.skip{background:none;border:0;color:var(--mut);padding:12px;font-weight:600;text-decoration:underline}
+.chk{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--bd);border-radius:12px;padding:14px;margin:14px 0;background:var(--card);font-weight:600}.chk input{width:24px;height:24px;flex:0 0 24px;margin:0;accent-color:var(--pri)}
+button:disabled{opacity:.45;cursor:not-allowed}.pol h4{margin:18px 0 6px;font-size:16px}.pol p,.pol li{color:var(--mut);font-size:14.5px}.pol b{color:var(--ink)}.pol .hl{border:2px solid var(--am);border-radius:10px;padding:10px 12px;color:var(--ink)}
+.ct{padding:0;display:inline-flex;overflow:hidden}.ct button{border:0;background:none;padding:6px 10px;font-weight:700;font-size:13px}
+.reco{background:var(--pri);color:var(--priI);border:2px solid var(--bd);box-shadow:4px 4px 0 var(--bd);border-radius:12px;padding:14px;margin:14px 0}.reco b{font-size:12px;letter-spacing:.1em}.reco p{color:inherit!important;margin:6px 0 0;font-weight:700;font-size:16px}.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.cmp div{border:2px solid var(--bd);border-radius:12px;padding:12px;background:var(--card);font-size:14px}.cmp b{display:block;margin-bottom:4px}
 </style></head><body>
 <main>
 
@@ -67,6 +76,8 @@ html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webk
  <button class="li" id="inst" style="display:none"><i data-ic="download"></i><span>Install Paycode app</span><i data-ic="chev"></i></button>
  <button class="li" data-go="help"><i data-ic="book"></i><span>Setup guide and help</span><i data-ic="chev"></i></button>
  <button class="li" data-go="set"><i data-ic="gear"></i><span>Settings and SIM codes</span><i data-ic="chev"></i></button>
+ <button class="li" data-go="priv"><i data-ic="shield"></i><span>Privacy policy and risks</span><i data-ic="chev"></i></button>
+ <button class="li" id="tourBtn"><i data-ic="route"></i><span>Take the app tour</span><i data-ic="chev"></i></button>
  <button class="li" data-go="about"><i data-ic="info"></i><span>About app and developer</span><i data-ic="chev"></i></button>
  <p class="note">Works only on SIMs that support UPI over USSD. See the setup guide.</p>
 </section>
@@ -74,6 +85,7 @@ html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webk
 <section class="pg" id="pay">
  <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>Send Money</h2></div>
  <div class="card">
+  <div id="ctsW"></div>
   <div class="seg"><button id="mUpi" class="on">UPI ID</button><button id="mMob">Mobile number</button></div>
   <label id="toL">Receiver UPI ID</label>
   <div class="with"><input id="to" placeholder="name@bank" autocapitalize="off" autocomplete="off"><button class="circ" id="cp" aria-label="Copy"><i data-ic="copy"></i></button><button class="circ" id="scan2" aria-label="Scan QR"><i data-ic="scan"></i></button></div>
@@ -82,14 +94,16 @@ html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webk
   <label>Note (optional)</label><input id="nt" maxlength="40">
   <div class="warn" id="lim"></div>
   <div style="height:16px"></div>
-  <button class="btn" id="go">Continue to Dialer</button>
+  <button class="btn sec" id="svc"><i data-ic="bookmark" data-s="20"></i>Save as contact</button><div style="height:10px"></div><button class="btn" id="go">Continue to Dialer</button>
   <p class="mut" style="margin:12px 0 0">The receiver ID is copied. In the dialer, paste it, enter the same amount, then your UPI PIN. Never enter your PIN in this app.</p>
  </div>
 </section>
 
 <section class="pg" id="hist">
  <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>History</h2></div>
- <div class="card"><div class="mut">Successful total</div><div class="amt" id="tot">₹0</div></div>
+ <div class="card"><div class="row" style="text-align:center"><div><div class="mut">Today</div><b class="mono" id="sT">₹0</b></div><div><div class="mut">This month</div><b class="mono" id="sM">₹0</b></div><div><div class="mut">All time</div><b class="mono" id="tot">₹0</b></div></div><div class="mut" style="margin-top:8px;text-align:center">Successful payments only</div></div>
+ <input id="hq" placeholder="Search name, UPI ID, reference, amount" style="margin-bottom:10px">
+ <div class="seg" id="hf" style="margin-bottom:14px"><button data-f="all" class="on">All</button><button data-f="ok">Success</button><button data-f="failed">Failed</button><button data-f="pending">Pending</button></div>
  <div class="card" id="list"></div>
  <div class="row"><button class="btn sec" id="csv"><i data-ic="download" data-s="20"></i>Export CSV</button><button class="btn sec" id="clr">Clear all</button></div>
 </section>
@@ -128,6 +142,11 @@ html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webk
   <label>Send to UPI ID code</label><input id="cU"><label>Send to mobile number code</label><input id="cM"><label>Check balance code</label><input id="cB">
   <label>Amount warning above (₹)</label><input id="cL" type="number">
   <div style="height:16px"></div><button class="btn" id="sv">Save Settings</button></div>
+ <div class="card"><div class="tag" style="margin:0 0 8px">App lock</div><div id="lockUI"></div>
+  <p class="mut" style="margin:10px 0 0">This PIN only locks Paycode on this device. Never use your UPI PIN here. If you forget it, clear this site's data (history will be deleted).</p></div>
+ <div class="card"><div class="tag" style="margin:0 0 8px">Backup and restore</div>
+  <p class="mut" style="margin:0 0 12px">Save your history and contacts to a file, or restore them on a new phone.</p>
+  <div class="row"><button class="btn sec" id="bk">Export backup</button><button class="btn sec" id="rs">Restore</button></div><input type="file" id="rfile" accept=".json,application/json" hidden></div>
 </section>
 <section class="pg" id="about">
  <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>About</h2></div>
@@ -145,8 +164,17 @@ html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webk
  <a class="li" href="mailto:forcontactonlyprsnl@gmail.com"><i data-ic="mail"></i><span>Email<br><small class="mut">forcontactonlyprsnl@gmail.com</small></span><i data-ic="chev"></i></a>
  <p class="note">Found a bug or want a feature? Send a message.</p>
 </section>
+<section class="pg" id="priv">
+ <div class="top"><button class="ib" data-go="home" aria-label="Back"><i data-ic="back"></i></button><h2>Privacy and risks</h2></div>
+ <div class="card pol" id="polBody"></div>
+</section>
 </main>
 
+<div class="tour" id="tour"><div class="tin"><div class="dots" id="dots"></div><div class="tbody" id="tb"></div>
+ <div class="tfoot"><button class="btn sec" id="tback">Back</button><button class="btn" id="tnext">Next</button><button class="btn" id="tfin" disabled style="display:none">Agree and start</button></div>
+ <button class="skip" id="tskip">Skip to agreement</button></div></div>
+<div class="ov" id="pov"><div class="card pol" style="max-height:85vh;overflow:auto"><div id="polModal"></div><div style="height:12px"></div><button class="btn" id="pclose">Close</button></div></div>
+<div class="ov" id="lock" style="background:var(--bg);z-index:40"><div class="card"><h3 style="margin:0 0 6px">Paycode is locked</h3><p class="mut">Enter your app PIN.</p><input id="lpin" type="password" inputmode="numeric" maxlength="6" autocomplete="off"><div class="warn" id="lerr"></div><div style="height:14px"></div><button class="btn" id="lgo">Unlock</button></div></div>
 <div class="ov" id="dov"><div class="card"><h3 style="margin:0 0 6px">Clear all history?</h3><p class="mut">This deletes every saved payment and cannot be undone.</p><div class="row"><button class="btn sec" id="dno">Cancel</button><button class="btn r" id="dyes">Delete all</button></div></div></div>
 <div class="ov" id="qov"><div class="card"><h3 style="margin:0 0 6px">Scan QR Code</h3><p class="mut" id="qm">Point the camera at a UPI QR code.</p><video id="vid" playsinline muted></video><div style="height:14px"></div><button class="btn sec" id="qx">Cancel</button></div></div>
 <div class="ov" id="cov"><div class="card">
@@ -161,12 +189,12 @@ html{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}body{-webk
 <div class="ov" id="rov"><div class="card"><img class="r" id="rimg" alt="Receipt"><div style="height:12px"></div><div class="row"><button class="btn" id="shr"><i data-ic="share" data-s="20"></i>Share</button><button class="btn sec" id="dl"><i data-ic="download" data-s="20"></i>Save</button></div><div style="height:10px"></div><button class="btn sec" id="rx">Close</button></div></div>
 
 <script>
-const I={instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',paste:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="8" y="8" width="8" height="8" rx="1"/>',upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',wallet:'<path d="M20 7H5a2 2 0 0 1 0-4h13v4zM3 5v14a2 2 0 0 0 2 2h15V7"/><circle cx="16.5" cy="14" r="1"/>',card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',back:'<path d="M15 18l-6-6 6-6"/>',help:'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',chev:'<path d="M9 18l6-6-6-6"/>',share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',download:'<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',alert:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>'};
+const I={shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',x:'<path d="M18 6L6 18M6 6l12 12"/>',bookmark:'<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',route:'<circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h8a3 3 0 0 0 0-6H7a3 3 0 0 1 0-6h8"/>',instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',paste:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="8" y="8" width="8" height="8" rx="1"/>',upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',wallet:'<path d="M20 7H5a2 2 0 0 1 0-4h13v4zM3 5v14a2 2 0 0 0 2 2h15V7"/><circle cx="16.5" cy="14" r="1"/>',card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',back:'<path d="M15 18l-6-6 6-6"/>',help:'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',chev:'<path d="M9 18l6-6-6-6"/>',share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',download:'<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',alert:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/>'};
 const svg=(n,s)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
 document.querySelectorAll('i[data-ic]').forEach(e=>{e.outerHTML=svg(e.dataset.ic,e.dataset.s||22)});
 const $=i=>document.getElementById(i);
 const DEF={op:'airtel',cU:'*99*1*3#',cM:'*99*1*1#',cB:'*99*3#',cL:5000};
-let S={tx:[],cfg:{...DEF},pend:null,theme:''},mode='upi',stream=null,scanning=false;
+let S={tx:[],cfg:{...DEF},pend:null,theme:'',contacts:[],pin:'',agreed:0},mode='upi',stream=null,scanning=false;
 try{const r=localStorage.getItem('ussdpay');if(r){const o=JSON.parse(r);S={...S,...o,cfg:{...DEF,...(o.cfg||{})}}}}catch(e){}
 const save=()=>{try{localStorage.setItem('ussdpay',JSON.stringify(S))}catch(e){}};
 const inr=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
@@ -247,8 +275,11 @@ $('rx').onclick=()=>$('rov').classList.remove('on');
 $('dl').onclick=()=>{const a=document.createElement('a');a.href=$('rimg').src;a.download='receipt-'+$('rov').dataset.id+'.png';a.click()};
 $('shr').onclick=async()=>{try{const b=await(await fetch($('rimg').src)).blob();const f=new File([b],'receipt.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});else $('dl').click()}catch(e){}};
 
-function renderH(){const ok=S.tx.filter(t=>t.status==='ok');$('tot').textContent=inr(ok.reduce((s,t)=>s+t.amt,0));
- $('list').innerHTML=S.tx.length?S.tx.map(t=>`<div class="tx" data-id="${t.id}"><div><b>${esc(t.name||t.to)}</b><div class="mut">${fmt(t.t)}${t.ref?' · '+esc(t.ref):''}</div></div><div style="text-align:right"><b>${inr(t.amt)}</b><div><span class="b ${t.status}">${t.status==='ok'?'SUCCESS':t.status.toUpperCase()}</span></div></div></div>`).join(''):'<span class="mut">No payments yet.</span>';
+let hf='all';
+function renderH(){const ok=S.tx.filter(t=>t.status==='ok'),d0=new Date();d0.setHours(0,0,0,0);const m0=new Date(d0.getFullYear(),d0.getMonth(),1).getTime(),sum=a=>a.reduce((z,t)=>z+t.amt,0);
+ $('sT').textContent=inr(sum(ok.filter(t=>t.t>=d0.getTime())));$('sM').textContent=inr(sum(ok.filter(t=>t.t>=m0)));$('tot').textContent=inr(sum(ok));
+ const q=($('hq').value||'').toLowerCase().trim(),L=S.tx.filter(t=>(hf==='all'||t.status===hf)&&(!q||[t.name,t.to,t.ref,t.note,t.amt].join(' ').toLowerCase().includes(q)));
+ $('list').innerHTML=L.length?L.map(t=>`<div class="tx" data-id="${t.id}"><div><b>${esc(t.name||t.to)}</b><div class="mut">${fmt(t.t)}${t.ref?' · '+esc(t.ref):''}</div></div><div style="text-align:right"><b>${inr(t.amt)}</b><div><span class="b ${t.status}">${t.status==='ok'?'SUCCESS':t.status.toUpperCase()}</span></div></div></div>`).join(''):`<span class="mut">${S.tx.length?'No matching payments.':'No payments yet.'}</span>`;
  document.querySelectorAll('.tx').forEach(r=>r.onclick=()=>{const t=S.tx.find(x=>x.id==r.dataset.id);if(t.status==='pending'){S.pend=t.id;askConfirm()}else receipt(t)})}
 $('csv').onclick=()=>{const rows=[['date','to','name','amount','status','reference','note']].concat(S.tx.map(t=>[new Date(t.t).toISOString(),t.to,t.name,t.amt,t.status,t.ref,t.note]));const s=rows.map(r=>r.map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv'}));a.download='payments.csv';a.click()};
 $('clr').onclick=()=>$('dov').classList.add('on');$('dno').onclick=()=>$('dov').classList.remove('on');$('dyes').onclick=()=>{S.tx=[];S.pend=null;save();$('dov').classList.remove('on');renderH();pendBox();toast('History cleared')};
@@ -256,11 +287,63 @@ $('clr').onclick=()=>$('dov').classList.add('on');$('dno').onclick=()=>$('dov').
 function loadSet(){$('op').value=S.cfg.op;$('cU').value=S.cfg.cU;$('cM').value=S.cfg.cM;$('cB').value=S.cfg.cB;$('cL').value=S.cfg.cL;$('hU').textContent=S.cfg.cU;$('hB').textContent=S.cfg.cB}
 $('op').onchange=()=>{if($('op').value==='airtel'){$('cU').value=DEF.cU;$('cM').value=DEF.cM;$('cB').value=DEF.cB}};
 $('sv').onclick=()=>{S.cfg={op:$('op').value,cU:$('cU').value.trim()||DEF.cU,cM:$('cM').value.trim()||DEF.cM,cB:$('cB').value.trim()||DEF.cB,cL:+$('cL').value||5000};save();loadSet();lim();toast('Settings saved');go('home')};
+
+$('hq').oninput=renderH;document.querySelectorAll('#hf button').forEach(b=>b.onclick=()=>{hf=b.dataset.f;document.querySelectorAll('#hf button').forEach(x=>x.classList.toggle('on',x===b));renderH()});
+/* contacts */
+function renderC(){$('ctsW').innerHTML=S.contacts.length?'<label style="margin-top:0">Saved contacts</label><div style="margin-bottom:4px">'+S.contacts.map((c,i)=>`<span class="chip ct"><button data-u="${i}">${esc(c.name)}</button><button data-d="${i}" aria-label="Remove contact">${svg('x',14)}</button></span>`).join('')+'</div>':''}
+$('ctsW').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.u!=null){const c=S.contacts[b.dataset.u];setMode(c.mode||'upi');$('to').value=c.to;$('nm').value=c.name===c.to?'':c.name}else if(b.dataset.d!=null){S.contacts.splice(b.dataset.d,1);save();renderC()}};
+$('svc').onclick=()=>{const to=$('to').value.trim();if(!to)return toast('Enter the receiver first');const name=$('nm').value.trim()||to;const i=S.contacts.findIndex(c=>c.to===to);const c={name,to,mode};if(i>=0)S.contacts[i]=c;else S.contacts.unshift(c);save();renderC();toast('Contact saved')};
+/* app lock */
+async function hp(p){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('paycode:'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let x=0;for(const c of 'paycode:'+p)x=(x*31+c.charCodeAt(0))|0;return'f'+x}}
+function showLock(){$('lpin').value='';$('lerr').textContent='';$('lock').classList.add('on')}
+$('lgo').onclick=async()=>{if(await hp($('lpin').value)===S.pin)$('lock').classList.remove('on');else{$('lerr').textContent='Wrong PIN';$('lpin').value=''}};
+function lockUI(){const u=$('lockUI');if(S.pin){u.innerHTML='<p class="mut" style="margin:0 0 10px">App lock is on.</p><input id="lc" type="password" inputmode="numeric" maxlength="6" placeholder="Enter current PIN"><div style="height:10px"></div><div class="row"><button class="btn sec" id="lnow">Lock now</button><button class="btn r" id="loff">Turn off</button></div>';$('lnow').onclick=showLock;$('loff').onclick=async()=>{if(await hp($('lc').value)===S.pin){S.pin='';save();lockUI();toast('App lock off')}else toast('Wrong PIN')}}
+ else{u.innerHTML='<input id="lc" type="password" inputmode="numeric" maxlength="6" placeholder="Choose 4 to 6 digit PIN"><div style="height:10px"></div><button class="btn" id="lon">Turn on app lock</button>';$('lon').onclick=async()=>{const v=$('lc').value;if(!/^\d{4,6}$/.test(v))return toast('Use 4 to 6 digits');S.pin=await hp(v);save();lockUI();toast('App lock on')}}}
+/* backup */
+$('bk').onclick=()=>{const o={app:'paycode',v:1,tx:S.tx,contacts:S.contacts,cfg:S.cfg};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='paycode-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click()};
+$('rs').onclick=()=>$('rfile').click();
+$('rfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const o=JSON.parse(await f.text());if(o.app!=='paycode'||!Array.isArray(o.tx))throw 0;const ids=new Set(S.tx.map(t=>t.id));let n=0;o.tx.forEach(t=>{if(t&&t.id&&!ids.has(t.id)){S.tx.push(t);n++}});S.tx.sort((a,b)=>b.t-a.t);(o.contacts||[]).forEach(c=>{if(c&&c.to&&!S.contacts.some(x=>x.to===c.to))S.contacts.push(c)});if(o.cfg)S.cfg={...DEF,...o.cfg};save();loadSet();renderC();renderH();toast('Restored '+n+' payments')}catch(x){toast('Not a valid Paycode backup')}};
+/* policy */
+const POLICY=`<p><b>Effective 15 October 2026.</b> Paycode is a helper app by Shahzaib Muzaffar. It opens your phone dialer with a USSD code and keeps a record you create. It is not a bank, payment service or wallet.</p>
+<h4>1. Data stored on your device</h4><ul><li>Payments you enter: receiver name, UPI ID or number, amount, note, reference number, date and your Success or Failed mark.</li><li>Saved contacts, your USSD codes, theme, and an optional app lock PIN (stored only as a hash).</li><li>All of it stays in this browser's storage on your phone. It is never uploaded.</li></ul>
+<h4>2. What Paycode does not do</h4><ul><li>No accounts, no analytics, no ads, no tracking, no servers that receive your data.</li><li>It never asks for or stores your UPI PIN, card details, bank account number or OTP. Enter those only in the dialer.</li><li>It cannot read the USSD reply, your SMS or your bank balance.</li></ul>
+<h4>3. Permissions</h4><ul><li><b>Camera:</b> only while scanning a QR code. Images are not saved or sent.</li><li><b>Clipboard:</b> it copies the receiver's UPI ID so you can paste it, and reads the clipboard only when you tap Paste.</li><li><b>Dialer:</b> it opens your phone app with the code. You press call yourself.</li></ul>
+<h4>4. Third-party links</h4><p>Instagram, Telegram and email links open outside Paycode. Their own policies apply.</p>
+<h4>5. Risks you accept</h4><ul><li><b>Wrong receiver or amount.</b> UPI payments usually cannot be reversed. Check the ID, name and amount in the dialer before entering your PIN.</li><li><b>Fake or tampered QR codes.</b> Only scan QR codes from people or shops you trust.</li><li><b>Receipts are not proof.</b> Receipts and Success marks are typed by you. They are not verified by any bank and can be wrong or misused.</li><li><b>USSD limits.</b> Sessions can time out, fail or be slow, and a limit (often 5,000 rupees per payment) applies. A timeout can leave a payment unclear.</li><li><b>Not every SIM works.</b> Codes differ by operator and country.</li><li><b>Shared or lost phones.</b> Anyone with access can see your history. Use the app lock and your phone's own lock.</li><li><b>Clipboard exposure.</b> Other apps on some phones can read copied text. Clear it after paying if you worry.</li><li><b>Screenshots and sharing.</b> Receipts you share contain names and IDs.</li><li><b>Data loss.</b> Clearing browser data or uninstalling deletes your history. Use Export backup.</li><li><b>No guarantee.</b> Paycode is provided as is, without warranty. Your bank and operator are responsible for your money, not Paycode.</li></ul>
+<h4>6. If your bank has not confirmed</h4><p class="hl"><b>A Success mark is only your note.</b> Treat a payment as done only when your bank confirms it by SMS, app or statement. If there is no bank confirmation, do not hand over goods or assume it was paid. Check your bank, wait a few minutes, and do not pay again until you know. If money was debited but the receiver did not get it, contact your bank with the reference number.</p>
+<h4>7. Your control</h4><p>Use Clear all in History, Export backup, or clear this site's data to delete everything. Removing the app deletes its data.</p>
+<h4>8. Changes and contact</h4><p>This policy may change with new versions. Questions: forcontactonlyprsnl@gmail.com.</p>`;
+$('polBody').innerHTML=POLICY;$('polModal').innerHTML='<h3 style="margin:0 0 8px">Privacy policy and risks</h3>'+POLICY;
+const openPolicy=()=>$('pov').classList.add('on');$('pclose').onclick=()=>$('pov').classList.remove('on');
+/* app tour */
+const li=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const STEPS=[
+{i:'wallet',t:'Welcome to Paycode',h:'<p class="mut">Make UPI payments with your phone signal, even with no mobile data. This short tour takes about a minute.</p>'+li(['Scan a QR code or type the receiver','Pay through your dialer with *99#','Keep receipts and a payment history'])+'<div class="reco"><b>RECOMMENDED</b><p>Install Paycode on your home screen to use it without internet. See the next step.</p></div>'},
+{i:'download',t:'Install Paycode',h:'<div class="reco"><b>STRONGLY RECOMMENDED</b><p>Add Paycode to your home screen so it opens without internet, like a normal app.</p></div><div class="cmp"><div><b style="color:var(--g)">Installed</b>Opens even with no internet and no data. Full screen, no browser bar.</div><div><b style="color:var(--r)">Not installed</b>You need internet every time to open the website.</div></div><ol><li><b>Android (Chrome):</b> tap the menu (three dots), then <b>Install app</b> or <b>Add to Home screen</b>.</li><li><b>iPhone (Safari):</b> tap Share, then <b>Add to Home Screen</b>.</li><li>Open the new Paycode icon once while you have internet. After that it works offline.</li></ol><button class="btn" id="tinst" style="display:none"><i data-ic="download" data-s="20"></i>Install now</button>'},
+{i:'route',t:'How a payment works',h:'<ol><li>Scan the receiver QR or type their UPI ID.</li><li>Enter the amount in Paycode first.</li><li>Tap Continue. Your dialer opens with the code filled in.</li><li>Press call, paste the receiver, enter the amount and your UPI PIN.</li><li>Come back and tap <b>Successful</b> or <b>Failed</b>. Add the reference number if you have it.</li></ol>'},
+{i:'gear',t:'First-time setup',h:'<p class="mut">Do this once, using the SIM linked to your bank account.</p><ol><li>Dial <b>*99#</b> and choose a language.</li><li>Choose Profile and register: pick your bank, then enter the last 6 digits and expiry of your debit card.</li><li>Set your UPI PIN. Never share it.</li><li>Test with a small amount like 1 to 10 rupees.</li></ol><p class="mut">Other SIM or country? Change the codes in Settings.</p>'},
+{i:'scan',t:'Your home screen',h:li(['<b>Scan QR:</b> reads the UPI ID and copies it','<b>Send money:</b> type the receiver and amount','<b>Balance:</b> opens the dialer to check balance','<b>History:</b> search, filter and open receipts','<b>Settings:</b> codes, app lock and backup'])},
+{i:'card',t:'Receipts and bank check',h:'<p class="mut">A receipt shows what you reported, plus the reference number if you add it. It is not verified by any bank.</p><p class="hl" style="border:2px solid var(--am);border-radius:10px;padding:10px 12px"><b>Always confirm with your bank.</b> If the bank has not confirmed the payment by SMS, app or statement, treat it as not paid and check with your bank.</p>'},
+{i:'alert',t:'Risks to know',h:li(['Payments usually cannot be reversed. Check the receiver before your PIN.','Only scan QR codes you trust.','Enter your UPI PIN only in the dialer, never in Paycode.','Sessions can time out. Do not pay again until you know the result.','Use app lock if others use your phone.'])},
+{i:'shield',t:'Privacy and agreement',h:'<p class="mut">Everything stays on your phone. No accounts, no tracking, nothing uploaded. Paycode cannot see your PIN or your bank.</p><button class="btn sec" id="rpol">Read the full privacy policy</button><label class="chk"><input type="checkbox" id="agr"><span>I have read and agree to the Privacy Policy, and I understand the risks and that I must confirm payments with my bank.</span></label>'}];
+let ts=0;
+function renderT(){const s=STEPS[ts],last=ts===STEPS.length-1;$('tb').innerHTML=`<div class="tic">${svg(s.i,38)}</div><h2>${s.t}</h2>${s.h}`;
+ $('dots').innerHTML=STEPS.map((_,i)=>`<i class="${i<=ts?'on':''}"></i>`).join('');
+ $('tback').style.visibility=ts?'visible':'hidden';$('tnext').style.display=last?'none':'flex';$('tfin').style.display=last?'flex':'none';$('tskip').style.display=last?'none':'block';
+ if(last){$('agr').checked=!!S.agreed;$('tfin').disabled=!S.agreed;$('agr').onchange=()=>$('tfin').disabled=!$('agr').checked;$('rpol').onclick=openPolicy}
+ if($('tinst')){$('tinst').style.display=(dip&&!standalone())?'flex':'none';$('tinst').onclick=()=>$('inst').onclick()}
+ $('tour').scrollTop=0}
+function showTour(){ts=0;renderT();$('tour').classList.add('on')}
+$('tnext').onclick=()=>{ts++;renderT()};$('tback').onclick=()=>{ts--;renderT()};$('tskip').onclick=()=>{ts=STEPS.length-1;renderT()};
+$('tfin').onclick=()=>{S.agreed=S.agreed||Date.now();save();$('tour').classList.remove('on');go('home');if(S.pin&&!S.unl){}};
+$('tourBtn').onclick=showTour;
+renderC();lockUI();
+
 let dip=null;const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone;const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-function showInstall(){$('inst').style.display=standalone()?'none':(dip||isIOS)?'flex':'none'}
+function showInstall(){const ti=$('tinst');if(ti)ti.style.display=(dip&&!standalone())?'flex':'none';$('inst').style.display=standalone()?'none':(dip||isIOS)?'flex':'none'}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;showInstall()});
 addEventListener('appinstalled',()=>{dip=null;showInstall();toast('Paycode installed')});
 $('inst').onclick=async()=>{if(dip){dip.prompt();try{await dip.userChoice}catch(e){}dip=null;showInstall()}else toast('Tap Share, then Add to Home Screen')};
 try{if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}catch(e){}
-loadSet();applyTheme();pendBox();ensure();showInstall();
+loadSet();applyTheme();pendBox();showInstall();if(!S.agreed)showTour();else{if(S.pin)showLock();ensure()}
 </script></body></html>
